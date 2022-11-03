@@ -1,22 +1,49 @@
 import React, { useState } from 'react'
 import { useGlobalContext } from '../context'
 import { PageHOC, CustomInput, CustomButton } from '../components'
+import { id } from 'ethers/lib/utils'
 
 const Home = () => {
-  const { contract, walletAddress } = useGlobalContext()
-  const { playerName, setPlayerName } = useState('')
+  const { contract, walletAddress, setShowAlert } = useGlobalContext()
+  const [playerName, setPlayerName] = useState('')
+  const handleClick = async () => {
+    try {
+      const playerExists = await contract.isPlayer(walletAddress)
+      if (!playerExists) {
+        await contract.registerPlayer(playerName, playerName)
+
+        setShowAlert({
+          status: 'true',
+          type: 'info',
+          message: `${playerName} is being summoned!`,
+        })
+      }
+    } catch (err) {
+      setShowAlert({
+        status: 'true',
+        type: 'error',
+        message: err.message,
+      })
+    }
+  }
 
   return (
-    <div className="flex flex-col">
-      <CustomInput
-        label="Name"
-        placeholder="Enter you player name"
-        value={playerName}
-        handleValueChange={setPlayerName}
-      />
+    walletAddress && (
+      <div className="flex flex-col">
+        <CustomInput
+          label="Name"
+          placeHolder="Enter your player name"
+          value={playerName}
+          handleValueChange={setPlayerName}
+        />
 
-      <CustomButton title="Register" handleClick={() => {}} restStyles="mt-6" />
-    </div>
+        <CustomButton
+          title="Register"
+          handleClick={handleClick}
+          restStyles="mt-6"
+        />
+      </div>
+    )
   )
 }
 
