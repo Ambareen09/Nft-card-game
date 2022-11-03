@@ -1,33 +1,33 @@
-import { useState, useEffect } from 'react';
-import Modal from 'react-modal';
+import { useState, useEffect } from 'react'
+import Modal from 'react-modal'
 
-import styles from '../styles';
-import { CustomButton } from '.';
-import { useGlobalContext } from '../context';
-import { GetParams, SwitchNetwork } from '../utils/onboard.js';
+import styles from '../styles'
+import { CustomButton } from '.'
+import { useGlobalContext } from '../context'
+import { GetParams, SwitchNetwork } from '../utils/onboard.js'
 
 const OnboardModal = () => {
-  const [modalIsOpen, setIsOpen] = useState(false);
-  const { updateCurrentWalletAddress } = useGlobalContext();
-  const [step, setStep] = useState(-1);
+  const [modalIsOpen, setIsOpen] = useState(false)
+  const { updateCurrentWalletAddress } = useGlobalContext()
+  const [step, setStep] = useState(-1)
 
   async function resetParams() {
-    const currentStep = await GetParams();
-    setStep(currentStep.step);
-    setIsOpen(currentStep.step !== -1);
+    const currentStep = await GetParams()
+    setStep(currentStep.step)
+    setIsOpen(currentStep.step !== -1)
   }
 
   useEffect(() => {
-    resetParams();
+    resetParams()
 
     window?.ethereum?.on('chainChanged', () => {
-      resetParams();
-    });
+      resetParams()
+    })
 
     window?.ethereum?.on('accountsChanged', () => {
-      resetParams();
-    });
-  }, []);
+      resetParams()
+    })
+  }, [])
 
   const generateStep = (st) => {
     switch (st) {
@@ -42,7 +42,7 @@ const OnboardModal = () => {
               handleClick={() => window.open('https://core.app/', '_blank')}
             />
           </>
-        );
+        )
 
       case 1:
         return (
@@ -55,7 +55,7 @@ const OnboardModal = () => {
               handleClick={updateCurrentWalletAddress}
             />
           </>
-        );
+        )
 
       case 2:
         return (
@@ -65,7 +65,7 @@ const OnboardModal = () => {
             </p>
             <CustomButton title="Switch" handleClick={SwitchNetwork} />
           </>
-        );
+        )
 
       case 3:
         return (
@@ -75,15 +75,17 @@ const OnboardModal = () => {
             </p>
             <CustomButton
               title="Grab some test tokens"
-              handleClick={() => window.open('https://faucet.avax.network/', '_blank')}
+              handleClick={() =>
+                window.open('https://faucet.avax.network/', '_blank')
+              }
             />
           </>
-        );
+        )
 
       default:
-        return <p className={styles.modalText}>Good to go!</p>;
+        return <p className={styles.modalText}>Good to go!</p>
     }
-  };
+  }
 
   return (
     <Modal
@@ -93,7 +95,7 @@ const OnboardModal = () => {
     >
       {generateStep(step)}
     </Modal>
-  );
-};
+  )
+}
 
-export default OnboardModal;
+export default OnboardModal

@@ -1,5 +1,5 @@
-import PageHOC from "./PageHOC";
+import PageHOC from './PageHOC'
+import CustomInput from './CustomInput'
+import CustomButton from './CustomButton'
 
-export {
-    PageHOC
-}
+export { PageHOC, CustomInput, CustomButton }
