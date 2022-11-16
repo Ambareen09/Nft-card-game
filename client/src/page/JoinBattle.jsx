@@ -13,7 +13,7 @@ const JoinBattle = () => {
     walletAddress,
   } = useGlobalContext()
   const navigate = useNavigate()
-  const handleClick = async () => {
+  const handleClick = async (battleName) => {
     setBattleName(battleName)
     try {
       await contract.joinBattle(battleName)

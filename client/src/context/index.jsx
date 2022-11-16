@@ -31,6 +31,7 @@ export const GlobalContextProvider = ({ children }) => {
   })
   const [battleName, setBattleName] = useState('')
   const [updateGameData, setUpdateGameData] = useState(0)
+  const [battleGround, setBattleGround] = useState('bg-astral')
 
   const navigate = useNavigate()
 
@@ -60,7 +61,7 @@ export const GlobalContextProvider = ({ children }) => {
       setContract(newContract)
     }
 
-    console.log(window.ethereum.isConnected(), "hiii")
+    console.log(window.ethereum.isConnected(), 'hiii')
     const timer = setTimeout(() => setSmartContractAndProvider(), [1000])
 
     return () => clearTimeout(timer)
@@ -127,6 +128,8 @@ export const GlobalContextProvider = ({ children }) => {
         battleName,
         setBattleName,
         gameData,
+        battleGround,
+        setBattleGround,
       }}
     >
       {children}
