@@ -35,6 +35,17 @@ export const GlobalContextProvider = ({ children }) => {
 
   const navigate = useNavigate()
 
+  //* Set battleground to local storage
+  useEffect(() => {
+    const isBattleground = localStorage.getItem('battleground')
+
+    if (isBattleground) {
+      setBattleGround(isBattleground)
+    } else {
+      localStorage.setItem('battleground', battleGround)
+    }
+  }, [])
+
   const updateCurrentWalletAddress = async () => {
     const accounts = await window?.ethereum?.request({
       method: 'eth_requestAccounts',
@@ -80,10 +91,12 @@ export const GlobalContextProvider = ({ children }) => {
     }
   }, [contract])
 
+  //* Handle Alert
+  //* Handle alerts
   useEffect(() => {
     if (showAlert?.status) {
       const timer = setTimeout(() => {
-        setShowAlert({ status: 'false', type: 'info', message: '' })
+        setShowAlert({ status: false, type: 'info', message: '' })
       }, [5000])
 
       return () => clearTimeout(timer)
