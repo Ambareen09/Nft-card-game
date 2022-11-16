@@ -30,6 +30,7 @@ export const GlobalContextProvider = ({ children }) => {
     activeBattle: null,
   })
   const [battleName, setBattleName] = useState('')
+  const [updateGameData, setUpdateGameData] = useState(0)
 
   const navigate = useNavigate()
 
@@ -59,6 +60,7 @@ export const GlobalContextProvider = ({ children }) => {
       setContract(newContract)
     }
 
+    console.log(window.ethereum.isConnected(), "hiii")
     const timer = setTimeout(() => setSmartContractAndProvider(), [1000])
 
     return () => clearTimeout(timer)
@@ -72,6 +74,7 @@ export const GlobalContextProvider = ({ children }) => {
         provider,
         walletAddress,
         setShowAlert,
+        setUpdateGameData,
       })
     }
   }, [contract])
@@ -112,7 +115,7 @@ export const GlobalContextProvider = ({ children }) => {
       }
     }
     fetchGameData()
-  }, [contract])
+  }, [contract, updateGameData])
 
   return (
     <GlobalContext.Provider
@@ -123,7 +126,7 @@ export const GlobalContextProvider = ({ children }) => {
         setShowAlert,
         battleName,
         setBattleName,
-        gameData
+        gameData,
       }}
     >
       {children}
