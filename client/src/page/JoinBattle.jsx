@@ -11,7 +11,6 @@ const JoinBattle = () => {
     setShowAlert,
     setBattleName,
     walletAddress,
-    setErrorMessage,
   } = useGlobalContext()
   const navigate = useNavigate()
   const handleClick = async (battleName) => {
@@ -24,7 +23,7 @@ const JoinBattle = () => {
         message: `Joining ${battleName}`,
       })
     } catch (error) {
-      setErrorMessage(error)
+      console.log(error)
     }
   }
   return (

@@ -5,24 +5,15 @@ import styles from '../styles'
 import { useGlobalContext } from '../context'
 
 const CreateBattle = () => {
-  const {
-    contract,
-    battleName,
-    setBattleName,
-    gameData,
-    setErrorMessage,
-  } = useGlobalContext()
+  const { contract, battleName, setBattleName, gameData } = useGlobalContext()
   const [waitBattle, setWaitBattle] = useState(false)
   const navigate = useNavigate()
 
   useEffect(() => {
-    if (gameData?.activeBattle?.battleStatus === 1) {
-      navigate(`/battle/${gameData.activeBattle.name}`)
-    } else if (gameData?.activeBattle?.battleStatus === 0) {
+    if (gameData?.activeBattle?.battleStatus === 0) {
       setWaitBattle(true)
     }
   }, [gameData])
-
   const handleClick = async () => {
     if (!battleName || !battleName.trim()) return null
 
@@ -30,7 +21,7 @@ const CreateBattle = () => {
       await contract.createBattle(battleName)
       setWaitBattle(true)
     } catch (error) {
-      setErrorMessage(error)
+      console.log(error)
     }
   }
 
