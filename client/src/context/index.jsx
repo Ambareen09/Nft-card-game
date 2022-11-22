@@ -7,6 +7,7 @@ import React, {
 } from 'react'
 import { ethers } from 'ethers'
 import Web3Modal from 'web3modal'
+import { GetParams } from '../utils/onboard.js'
 
 import { useNavigate } from 'react-router-dom'
 
@@ -18,6 +19,7 @@ const GlobalContext = createContext()
 export const GlobalContextProvider = ({ children }) => {
   const [walletAddress, setWalletAddress] = useState('')
   const [provider, setProvider] = useState('')
+  const [step, setStep] = useState(1)
   const [contract, setContract] = useState('')
   const [showAlert, setShowAlert] = useState({
     status: false,
@@ -30,6 +32,7 @@ export const GlobalContextProvider = ({ children }) => {
     activeBattle: null,
   })
   const [battleName, setBattleName] = useState('')
+  const [errorMessage, setErrorMessage] = useState('')
   const [updateGameData, setUpdateGameData] = useState(0)
   const [battleGround, setBattleGround] = useState('bg-astral')
 
@@ -52,6 +55,20 @@ export const GlobalContextProvider = ({ children }) => {
     })
     if (accounts) setWalletAddress(accounts[0])
   }
+
+  //* Reset web3 onboarding modal params
+  useEffect(() => {
+    const resetParams = async () => {
+      const currentStep = await GetParams()
+
+      setStep(currentStep.step)
+    }
+
+    resetParams()
+
+    window?.ethereum?.on('chainChanged', () => resetParams())
+    window?.ethereum?.on('accountsChanged', () => resetParams())
+  }, [])
 
   //* Set the wallet address to the state
   useEffect(() => {
@@ -79,7 +96,7 @@ export const GlobalContextProvider = ({ children }) => {
   }, [])
 
   useEffect(() => {
-    if (contract) {
+    if (step !== -1 && contract) {
       createEventListener({
         navigate,
         contract,
@@ -89,9 +106,8 @@ export const GlobalContextProvider = ({ children }) => {
         setUpdateGameData,
       })
     }
-  }, [contract])
+  }, [contract, step])
 
-  //* Handle Alert
   //* Handle alerts
   useEffect(() => {
     if (showAlert?.status) {
@@ -131,6 +147,22 @@ export const GlobalContextProvider = ({ children }) => {
     fetchGameData()
   }, [contract, updateGameData])
 
+  useEffect(() => {
+    if (errorMessage) {
+      const parsedErrorMessage = errorMessage?.reason
+        ?.slice('execution reverted: '.length)
+        .slice(0, -1)
+
+      if (parsedErrorMessage) {
+        setShowAlert({
+          status: true,
+          type: 'failure',
+          message: parsedErrorMessage,
+        })
+      }
+    }
+  }, [errorMessage])
+
   return (
     <GlobalContext.Provider
       value={{
@@ -143,6 +175,8 @@ export const GlobalContextProvider = ({ children }) => {
         gameData,
         battleGround,
         setBattleGround,
+        errorMessage,
+        setErrorMessage,
       }}
     >
       {children}
