@@ -1,49 +1,47 @@
-import React, { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { CustomButton, CustomInput, PageHOC, GameLoad } from '../components'
-import styles from '../styles'
-import { useGlobalContext } from '../context'
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+
+import styles from '../styles';
+import { useGlobalContext } from '../context';
+import { CustomButton, CustomInput, GameLoad, PageHOC } from '../components';
 
 const CreateBattle = () => {
-  const {
-    contract,
-    battleName,
-    setBattleName,
-    gameData,
-    setErrorMessage,
-  } = useGlobalContext()
-  const [waitBattle, setWaitBattle] = useState(false)
-  const navigate = useNavigate()
+  const { contract, gameData, battleName, setBattleName, setErrorMessage } = useGlobalContext();
+  const [waitBattle, setWaitBattle] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (gameData?.activeBattle?.battleStatus === 1) {
-      navigate(`/battle/${gameData.activeBattle.name}`)
+      navigate(`/battle/${gameData.activeBattle.name}`);
     } else if (gameData?.activeBattle?.battleStatus === 0) {
-      setWaitBattle(true)
+      setWaitBattle(true);
     }
-  }, [gameData])
+  }, [gameData]);
 
   const handleClick = async () => {
-    if (!battleName || !battleName.trim()) return null
+    if (battleName === '' || battleName.trim() === '') return null;
 
     try {
-      await contract.createBattle(battleName)
-      setWaitBattle(true)
+      await contract.createBattle(battleName);
+
+      setWaitBattle(true);
     } catch (error) {
-      setErrorMessage(error)
+      setErrorMessage(error);
     }
-  }
+  };
 
   return (
     <>
       {waitBattle && <GameLoad />}
+
       <div className="flex flex-col mb-5">
         <CustomInput
           label="Battle"
-          placeholder="Enter battle name"
-          vaue={battleName}
+          placeHolder="Enter battle name"
+          value={battleName}
           handleValueChange={setBattleName}
         />
+
         <CustomButton
           title="Create Battle"
           handleClick={handleClick}
@@ -54,16 +52,11 @@ const CreateBattle = () => {
         Or join already existing battles
       </p>
     </>
-  )
-}
+  );
+};
 
 export default PageHOC(
   CreateBattle,
-  <>
-    {' '}
-    Create <br /> a new Battle
-  </>,
-  <>
-    Create your own battle <br /> and wait for other player to join you
-  </>,
-)
+  <>Create <br /> a new Battle</>,
+  <>Create your own battle and wait for other players to join you</>,
+);

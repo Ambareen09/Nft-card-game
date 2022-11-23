@@ -1,3 +1,5 @@
+/* eslint-disable no-plusplus */
+/* eslint-disable no-param-reassign */
 import { explosion } from '../assets';
 
 // https://codepen.io/meodai/pen/OVVzBb\

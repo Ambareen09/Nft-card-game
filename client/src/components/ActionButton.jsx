@@ -1,6 +1,6 @@
-import React from 'react'
+import React from 'react';
 
-import styles from '../styles'
+import styles from '../styles';
 
 const ActionButton = ({ imgUrl, handleClick, restStyles }) => (
   <div
@@ -9,6 +9,6 @@ const ActionButton = ({ imgUrl, handleClick, restStyles }) => (
   >
     <img src={imgUrl} alt="action_img" className={styles.gameMoveIcon} />
   </div>
-)
+);
 
-export default ActionButton
+export default ActionButton;

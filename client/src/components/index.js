@@ -1,23 +1,23 @@
-import PageHOC from './PageHOC'
-import CustomInput from './CustomInput'
-import CustomButton from './CustomButton'
-import Alert from './Alert'
-import GameLoad from './GameLoad'
-import ActionButton from './ActionButton'
-import Card from './Card'
-import GameInfo from './GameInfo'
-import PlayerInfo from './PlayerInfo'
-import OnboardModal from './OnboardModal'
+import Card from './Card';
+import Alert from './Alert';
+import PageHOC from './PageHOC';
+import GameInfo from './GameInfo';
+import GameLoad from './GameLoad';
+import PlayerInfo from './PlayerInfo';
+import CustomInput from './CustomInput';
+import CustomButton from './CustomButton';
+import ActionButton from './ActionButton';
+import OnboardModal from './OnboardModal';
 
 export {
+  Card,
+  Alert,
   PageHOC,
+  GameInfo,
+  GameLoad,
+  PlayerInfo,
   CustomInput,
   CustomButton,
-  Alert,
-  GameLoad,
   ActionButton,
-  Card,
-  GameInfo,
-  PlayerInfo,
   OnboardModal,
-}
+};

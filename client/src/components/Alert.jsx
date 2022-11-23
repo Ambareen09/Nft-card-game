@@ -1,7 +1,7 @@
-import React from 'react'
+import React from 'react';
 
-import { AlertIcon } from '../assets'
-import styles from '../styles'
+import { AlertIcon } from '../assets';
+import styles from '../styles';
 
 const Alert = ({ type, message }) => (
   <div className={`${styles.alertContainer} ${styles.flexCenter}`}>
@@ -9,6 +9,6 @@ const Alert = ({ type, message }) => (
       <AlertIcon type={type} /> {message}
     </div>
   </div>
-)
+);
 
-export default Alert
+export default Alert;

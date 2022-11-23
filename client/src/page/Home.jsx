@@ -1,45 +1,50 @@
-import React, { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { useGlobalContext } from '../context'
-import { PageHOC, CustomInput, CustomButton } from '../components'
-import { id } from 'ethers/lib/utils'
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+
+import { CustomButton, CustomInput, PageHOC } from '../components';
+import { useGlobalContext } from '../context';
 
 const Home = () => {
-  const { contract, walletAddress, setShowAlert } = useGlobalContext()
-  const [playerName, setPlayerName] = useState('')
-  const navigate = useNavigate()
+  const { contract, walletAddress, gameData, setShowAlert, setErrorMessage } = useGlobalContext();
+  const [playerName, setPlayerName] = useState('');
+  const navigate = useNavigate();
 
   const handleClick = async () => {
     try {
-      const playerExists = await contract.isPlayer(walletAddress)
+      const playerExists = await contract.isPlayer(walletAddress);
+
       if (!playerExists) {
-        await contract.registerPlayer(playerName, playerName)
+        await contract.registerPlayer(playerName, playerName, { gasLimit: 500000 });
 
         setShowAlert({
           status: true,
           type: 'info',
           message: `${playerName} is being summoned!`,
-        })
+        });
+
+        setTimeout(() => navigate('/create-battle'), 8000);
       }
-    } catch (err) {
-      setShowAlert({
-        status: true,
-        type: 'failure',
-        message: 'Something went wrong',
-      })
+    } catch (error) {
+      setErrorMessage(error);
     }
-  }
+  };
 
   useEffect(() => {
-    const checkForPlayerToken = async () => {
-      const playerExists = await contract.isPlayer(walletAddress)
-      const playerTokenExists = await contract.isPlayerToken(walletAddress)
-      console.log({ playerExists, playerTokenExists })
-      if (playerTokenExists && playerTokenExists) navigate('/create-battle')
-    }
+    const createPlayerToken = async () => {
+      const playerExists = await contract.isPlayer(walletAddress);
+      const playerTokenExists = await contract.isPlayerToken(walletAddress);
 
-    if (contract) checkForPlayerToken()
-  }, [contract])
+      if (playerExists && playerTokenExists) navigate('/create-battle');
+    };
+
+    if (contract) createPlayerToken();
+  }, [contract]);
+
+  useEffect(() => {
+    if (gameData.activeBattle) {
+      navigate(`/battle/${gameData.activeBattle.name}`);
+    }
+  }, [gameData]);
 
   return (
     walletAddress && (
@@ -58,16 +63,16 @@ const Home = () => {
         />
       </div>
     )
-  )
-}
+  );
+};
 
 export default PageHOC(
   Home,
   <>
-    {' '}
-    Welcome to Card Wars <br /> A web3 NFT card game
+    Welcome to Avax Gods <br /> a Web3 NFT Card Game
   </>,
   <>
-    Connect your wallter to start playing <br /> the Ultimate Web3 card game
+    Connect your wallet to start playing <br /> the ultimate Web3 Battle Card
+    Game
   </>,
-)
+);
