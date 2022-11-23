@@ -7,7 +7,7 @@ A Blockchain based online NFT Card game which can be played by two players.
 
 ## 1. Clone this repository
 ```
-https://github.com/Ambareen09/Nft-card-game.git
+git clone https://github.com/Ambareen09/Nft-card-game.git
 ```
 
 ## 2. Instructions on setting up the Web3 part of the project
