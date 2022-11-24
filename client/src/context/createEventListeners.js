@@ -8,7 +8,7 @@ const AddNewEvent = (eventFilter, provider, cb) => {
   provider.removeListener(eventFilter);
 
   provider.on(eventFilter, (logs) => {
-    const parsedLog = (new ethers.utils.Interface(ABI)).parseLog(logs);
+    const parsedLog = new ethers.utils.Interface(ABI).parseLog(logs);
 
     cb(parsedLog);
   });
@@ -26,7 +26,16 @@ const getCoords = (cardRef) => {
 
 const emptyAccount = '0x0000000000000000000000000000000000000000';
 
-export const createEventListeners = ({ navigate, contract, provider, walletAddress, setShowAlert, player1Ref, player2Ref, setUpdateGameData }) => {
+export const createEventListeners = ({
+  navigate,
+  contract,
+  provider,
+  walletAddress,
+  setShowAlert,
+  player1Ref,
+  player2Ref,
+  setUpdateGameData,
+}) => {
   const NewPlayerEventFilter = contract.filters.NewPlayer();
   AddNewEvent(NewPlayerEventFilter, provider, ({ args }) => {
     console.log('New player created!', args);
@@ -44,7 +53,10 @@ export const createEventListeners = ({ navigate, contract, provider, walletAddre
   AddNewEvent(NewBattleEventFilter, provider, ({ args }) => {
     console.log('New battle started!', args, walletAddress);
 
-    if (walletAddress.toLowerCase() === args.player1.toLowerCase() || walletAddress.toLowerCase() === args.player2.toLowerCase()) {
+    if (
+      walletAddress.toLowerCase() === args.player1.toLowerCase()
+      || walletAddress.toLowerCase() === args.player2.toLowerCase()
+    ) {
       navigate(`/battle/${args.battleName}`);
     }
 
